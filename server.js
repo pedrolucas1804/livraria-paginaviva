@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
-app.use('/', express.static(path.join(__dirname, '../frontend')));
+app.use('/', express.static(path.join(__dirname, 'frontend')));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ message: 'Página Viva API funcionando.' });

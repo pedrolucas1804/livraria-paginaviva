@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a0a00" />
+  <meta name="description" content="Livraria Página Viva — seu próximo livro favorito está aqui" />
+  <title>Página Viva — Livraria</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-icon">📖</span>
+      <span class="logo-text">Página Viva</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-tab="loja">Loja</button>
+      <button class="tab-btn" data-tab="conta">Minha Conta</button>
+      <button class="tab-btn admin-tab" data-tab="admin">Admin</button>
+    </div>
+    <div class="nav-user" id="navUser">
+      <span id="userGreeting"></span>
+      <button id="navLogoutBtn" style="display:none">Sair</button>
+    </div>
+  </nav>
+
+  <!-- TAB: LOJA -->
+  <div id="tab-loja" class="tab-content active">
+
+    <div class="hero">
+      <div class="hero-text">
+        <p class="hero-label">Bem-vindo à</p>
+        <h1 class="hero-title">Página Viva</h1>
+        <p class="hero-sub">Livros que transformam. Histórias que ficam.</p>
+      </div>
+      <div class="hero-deco">❦</div>
+    </div>
+
+    <div class="container">
+      <div class="shop-toolbar">
+        <input type="text" id="searchInput" placeholder="Buscar por título, autor ou categoria…" class="search-input" />
+        <button id="loadBooksBtn" class="btn-primary">Ver todos os livros</button>
+      </div>
+
+      <div id="booksList" class="books-grid"></div>
+
+      <section class="card" id="singleBookCard" style="display:none">
+        <h2>Detalhes do livro</h2>
+        <pre id="singleBookOutput"></pre>
+      </section>
+    </div>
+  </div>
+
+  <!-- TAB: CONTA -->
+  <div id="tab-conta" class="tab-content">
+    <div class="container">
+
+      <div class="auth-grid">
+        <section class="card">
+          <h2>Criar conta</h2>
+          <form id="registerForm">
+            <input type="text" id="registerName" placeholder="Seu nome" required />
+            <input type="email" id="registerEmail" placeholder="Email" required />
+            <input type="password" id="registerPassword" placeholder="Senha (mín. 6 caracteres)" required />
+            <button type="submit" class="btn-primary">Cadastrar</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <h2>Entrar</h2>
+          <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required />
+            <input type="password" id="loginPassword" placeholder="Senha" required />
+            <button type="submit" class="btn-primary">Entrar</button>
+          </form>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Meu perfil</h2>
+        <div class="actions">
+          <button id="loadProfileBtn" class="btn-secondary">Carregar perfil</button>
+          <button id="logoutBtn" class="btn-danger">Sair</button>
+        </div>
+        <pre id="profileOutput">Faça login para ver seu perfil.</pre>
+      </section>
+
+      <section class="card">
+        <h2>Resposta</h2>
+        <pre id="apiOutput">Aguardando ação.</pre>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- TAB: ADMIN -->
+  <div id="tab-admin" class="tab-content">
+    <div class="container">
+
+      <div class="admin-header">
+        <span class="badge-admin">Área administrativa</span>
+        <p>Requer login com conta <strong>admin</strong></p>
+      </div>
+
+      <section class="card">
+        <h2>Cadastrar livro</h2>
+        <form id="createBookForm">
+          <div class="form-row">
+            <input type="text" id="bookTitle" placeholder="Título do livro" required />
+            <input type="text" id="bookAuthor" placeholder="Autor" required />
+          </div>
+          <textarea id="bookDescription" placeholder="Sinopse / descrição" rows="3" required></textarea>
+          <div class="form-row">
+            <input type="number" id="bookPrice" placeholder="Preço (ex: 39.90)" step="0.01" min="0" required />
+            <input type="text" id="bookCategory" placeholder="Categoria (ex: Romance, Sci-Fi)" required />
+          </div>
+          <div class="form-row">
+            <input type="number" id="bookStock" placeholder="Estoque" min="0" value="0" required />
+            <input type="text" id="bookIsbn" placeholder="ISBN (opcional)" />
+          </div>
+          <input type="text" id="bookPublisher" placeholder="Editora (opcional)" />
+          <input type="number" id="bookPages" placeholder="Nº de páginas (opcional)" min="1" />
+          <button type="submit" class="btn-primary">Cadastrar livro</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Atualizar livro</h2>
+        <form id="updateBookForm">
+          <input type="text" id="updateBookId" placeholder="ID do livro" required />
+          <div class="form-row">
+            <input type="text" id="updateBookTitle" placeholder="Novo título" />
+            <input type="text" id="updateBookAuthor" placeholder="Novo autor" />
+          </div>
+          <input type="number" id="updateBookPrice" placeholder="Novo preço" step="0.01" min="0" />
+          <input type="number" id="updateBookStock" placeholder="Novo estoque" min="0" />
+          <select id="updateBookActive">
+            <option value="">Manter status atual</option>
+            <option value="true">Disponível</option>
+            <option value="false">Indisponível</option>
+          </select>
+          <button type="submit" class="btn-primary">Atualizar</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Remover livro</h2>
+        <form id="deleteBookForm">
+          <input type="text" id="deleteBookId" placeholder="ID do livro" required />
+          <button type="submit" class="btn-danger">Excluir livro</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Gerenciar usuários</h2>
+        <div class="actions">
+          <button id="loadUsersBtn" class="btn-secondary">Listar usuários</button>
+        </div>
+        <pre id="usersOutput">Aguardando.</pre>
+      </section>
+
+      <section class="card">
+        <h2>Resposta da API</h2>
+        <pre id="adminApiOutput">Aguardando ação.</pre>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2026 Página Viva · Todos os direitos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
